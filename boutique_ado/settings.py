@@ -64,7 +64,10 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            # adding the route template directories
             os.path.join(BASE_DIR, "templates"),
+
+            # adding our custom allauth directory to template dirs setting
             os.path.join(BASE_DIR, "templates", "allauth")
         ],
         'APP_DIRS': True,
