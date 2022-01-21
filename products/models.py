@@ -6,6 +6,13 @@ from django.db import models
 # with categories like clothing, kitchen & dining etc.
 # inherited from models.Model
 class Category(models.Model):
+
+    # specifying that plural name for categories
+    # is "Categories", not "Categorys" which it
+    # set by default
+    class Meta:
+        verbose_name_plural = "Categories";
+
     # programmatic name "bed_bath" etc.
     name = models.CharField(max_length=254)
 
