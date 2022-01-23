@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.db.models import Q
 from .models import Product, Category
 
+
 # Create your views here.
 def all_products(request):
     """
@@ -19,8 +20,28 @@ def all_products(request):
     products = Product.objects.all()
     query = None
     categories = None
+    sort = None
+    direction = None
 
     if request.GET:
+
+        if 'sort' in request.GET:
+
+            sort_key = request.GET['sort']
+            sort = sort_key
+            if sort_key == 'name':
+                sort_key = 'lower_name'
+                products = products.annotate(lower_name=Lower('name'))
+
+            if sort_key == "category":
+                sort_key = "category__name"
+
+            if 'direction' in request.GET:
+                direction = request.GET['direction']
+                if direction == 'desc':
+                    sort_key = f'-{sort_key}'
+
+            products = products.order_by(sort_key)
 
         if "category" in request.GET:
             categories = request.GET["category"].split(",")
@@ -46,12 +67,15 @@ def all_products(request):
 
             # Filter all products that match the query inserted
             products = products.filter(queries)
-            
+
+    current_sorting = f'{sort}_{direction}'
+
     # Add products to context to send them to template
     context = {
         "products": products,
         "search_term": query,
         "current_categories": categories,
+        "current_sorting": current_sorting,
     }
 
     return render(request, "products/products.html", context)
