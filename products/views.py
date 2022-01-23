@@ -7,6 +7,7 @@ from django.contrib import messages
 # query with it's product name AND description
 # The Q object allows us to do name OR description
 from django.db.models import Q
+from django.db.models.functions import Lower
 from .models import Product, Category
 
 
