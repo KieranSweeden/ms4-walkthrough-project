@@ -23,18 +23,46 @@ def add_to_bag(request, item_id):
     # Telling us where to re-direct to after this view is completed
     redirect_url = request.POST.get("redirect_url")
 
+    # Init's the size to none as some products are only one size
+    size = None
+
+    # If a product size is present within request,
+    # Replace the initial value with the requested one
+    if 'product_size' in request.POST:
+        size = request.POST['product_size']
+
+
     # Grab the session bag if it exists
     # Initialise a new dictionary if it doesn't
     bag = request.session.get("bag", {})
 
-    # If there's already a key in the bag, that matches
-    # the current product id, increment it accordingly
-    # else give it the amount specified within from request
-    if item_id in list(bag.keys()):
-        bag[item_id] += quantity
+    if size:
+        if item_id in list(bag.keys()):
+            # If the item is already in the bag, check to see if another item of the same id
+            # and same size already exists. If so, increment the quantity for that size
+            if size in bag[item_id]['items_by_size'].keys():
+                bag[item_id]['items_by_size'][size] += quantity
+                # Otherwise, set the amount of this item in a particular size to the quantity,
+                # As this is a new size for that item
+            else:
+                bag[item_id]['items_by_size'][size] = quantity
+        else:
+            # If item is not already present within bag, add it to the bag
+            # We're doing it as a dictionary with the key of items_by_size, as we
+            # May have multiple items with this item_id, but different sizes.
+            # This allows us to structure the bags such that we can have a single item_id for each item,
+            #  But still track multiple sizes
+            bag[item_id] = {'items_by_size': {size: quantity}}
     else:
-        bag[item_id] = quantity
-    
+
+        # If there's already a key in the bag, that matches
+        # the current product id, increment it accordingly
+        # else give it the amount specified within from request
+        if item_id in list(bag.keys()):
+            bag[item_id] += quantity
+        else:
+            bag[item_id] = quantity
+  
     # Place the bag dictionary within the session
     request.session['bag'] = bag
 
