@@ -49,6 +49,10 @@ INSTALLED_APPS = [
     'products',
     'bag',
     'checkout',
+
+    # crispy forms - allows us to format our forms using
+    # bootstrap styling
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
@@ -62,6 +66,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'boutique_ado.urls'
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 TEMPLATES = [
     {
@@ -84,9 +90,17 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
+                'django.template.context_processors.media',
+
                 # Making the bag_contents function available throughout app
                 'bag.contexts.bag_contents',
             ],
+            "builtins": [
+                # Contains all the tags we want available in
+                # all of our templates by default
+                "crispy_forms.templatetags.crispy_forms_tags",
+                "crispy_forms.templatetags.crispy_forms_field",
+            ]
         },
     },
 ]
