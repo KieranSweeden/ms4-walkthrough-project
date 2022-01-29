@@ -3,6 +3,7 @@ from django.contrib import messages
 
 from .forms import OrderForm
 
+
 def checkout(request):
     """
     Render the checkout template
@@ -26,7 +27,9 @@ def checkout(request):
     # Create the context containing the newly
     # initialised form
     context = {
-        "order_form": order_form
+        "order_form": order_form,
+        "stripe_public_key": "pk_test_51KNDeFGYaqqjYoasIttAKkntoZQzksmkC0ZJOoyuWEzWg9j6IYFZO3R2KdoHYe4eh76ovs8X9x9MaJSa2zeiQkdz00DOgZldj8",
+        "client_secret": "test secret",
     }
 
     # Render the template with it's context

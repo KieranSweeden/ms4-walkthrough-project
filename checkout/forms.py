@@ -56,6 +56,8 @@ class OrderForm(forms.ModelForm):
             
             # Give them their respective placeholders & classes
             self.fields[field].widget.attrs['placeholder'] = placeholder
+
+            # Follow stripe css in the checkout css file
             self.fields[field].widget.attrs['class'] = 'stripe-style-input'
 
             # We're also removing the labels as placeholders are now set
