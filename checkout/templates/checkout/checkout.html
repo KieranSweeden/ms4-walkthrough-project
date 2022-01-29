@@ -143,7 +143,7 @@
     <!-- We need to use json_script to render them here, then we can access -->
     <!-- Them within the external file -->
     {{ stripe_public_key|json_script:"id_stripe_public_key"}}
-    {{ stripe_public_key|json_script:"id_client_secret"}}
+    {{ client_secret|json_script:"id_client_secret"}}
 
     <script src="{% static 'checkout/js/stripe_elements.js' %}"></script>
 {% endblock %}

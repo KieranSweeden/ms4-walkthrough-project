@@ -205,8 +205,23 @@ MEDIA_URL = "/media/"
 # tells django where all of our media files are located
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
+# Stripe
 FREE_DELIVERY_THRESHOLD = 50
 STANDARD_DELIVERY_PERCENTAGE = 10
+STRIPE_CURRENCY = 'usd'
+
+# The following are env variables
+# The public key is here purely for consistency
+# The secret key is important to be secret as it's used to do
+# everything within stripe. This includes:
+# creating charges, making payments, issuing refunds & updating account info
+# use set PUBLIC_SECRET_KEY <key> to set these variables in gitpod
+# doing it this way is not permanent and you'd need to do it every time you
+# start your workspace - this can be permanent by using the env vars
+# in gitpod settings
+STRIPE_PUBLIC_KEY = os.environ.get('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
