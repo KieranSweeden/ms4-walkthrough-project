@@ -54,7 +54,10 @@ class Order(models.Model):
         # for all line items within this order
         # Default behaviour is to add a new field to the query set called "lineitem_total__sum"
         # Which we can get and set the order total to that
-        self.order_total = self.lineitems.aggregate(Sum('lineitem_total'))['lineitem_total__sum']
+        # or 0 is added as an error handling measure, as the following line under the this code expects an int
+        # without or 0, it returns none, which would cause an error as the if statment below would
+        # attempt to see if delivery threshold is less than none, which isn't good
+        self.order_total = self.lineitems.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or 0
 
         # With order total calculated, we can then calculate the delivery cost
         if self.order_total < settings.FREE_DELIVERY_THRESHOLD:
