@@ -209,6 +209,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 FREE_DELIVERY_THRESHOLD = 50
 STANDARD_DELIVERY_PERCENTAGE = 10
 STRIPE_CURRENCY = 'usd'
+STRIPE_WH_SECRET = os.environ.get("STRIPE_WH_SECRET")
 
 # The following are env variables
 # The public key is here purely for consistency
