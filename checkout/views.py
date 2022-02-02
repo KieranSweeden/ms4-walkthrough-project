@@ -73,7 +73,22 @@ def checkout(request):
         if order_form.is_valid():
             # We'll save the order, giving it a variable so we can use it
             # within the redirect function at the bottom
-            order = order_form.save()
+            # Commit = False adds optimization, preventing the first save
+            # from happening
+            order = order_form.save(commit=False)
+
+            # Obtain client secret by getting from form and splitting
+            pid = request.POST.get('client_secret').split("_secret")[0]
+
+            # Apply client secret to stripe pid in order
+            order.stripe_pid = pid
+
+            # Place bag within original bag paramter of order
+            # Json.dumps converts Python object to json string
+            order.original_bag = json.dumps(bag)
+
+            # Save the order
+            order.save()
 
             # We'll then iterate through the bag items to create line items
             for item_id, item_data in bag.items():

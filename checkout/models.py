@@ -37,6 +37,16 @@ class Order(models.Model):
     order_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
     grand_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
 
+    # These two fields are to combat the likelihood in which the same customer
+    # could make the same order twice on different occasions, which would result
+    # in us finding the first order, thus the second order is not added
+
+    # Contains the original shopping bad that created it
+    original_bag = models.TextField(null=False, blank=False, default="")
+
+    # Contains the stripe payment intent ID which is guarunteed to be unique
+    stripe_pid = models.CharField(max_length=254, null=False, blank=False, default="")
+
     # prepended with _ to indicate it's a private method that'll
     # only be used inside this class
     def _generate_order_number(self):
