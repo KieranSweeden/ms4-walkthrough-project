@@ -7,6 +7,7 @@ from django.conf import settings
 from django_countries.fields import CountryField
 
 from products.models import Product
+from profiles.models import UserProfile
 
 # Flow of these models
 # 1. first use the information given within a payment form to create an instance of Order
@@ -20,6 +21,18 @@ class Order(models.Model):
     # editable = false is self explanatory - this will be a unique & permanent no.
     # so it cannot be edited
     order_number = models.CharField(max_length=32, null=False, editable=False)
+
+    # create new foreign key to user profile model
+    # We're using models.SET_NULL if profile is deleted since it will allow
+    # us to keep an order history in the admin even is user is deleted
+    # null & blank being true allows anonymous users to make purchases
+    # related_name set to orders in this case allows us to access the
+    # user's orders by calling something like user.userProfile.orders (in this case)
+    user_profile = models.ForeignKey(UserProfile,
+                                     on_delete=models.SET_NULL,
+                                     null=True,
+                                     blank=True,
+                                     related_name='orders')
 
     full_name = models.CharField(max_length=50, null=False, blank=False)
     email = models.EmailField(max_length=254, null=False, blank=False)
