@@ -35,12 +35,11 @@ class OrderForm(forms.ModelForm):
             'full_name': 'Full Name',
             'email': 'Email Address',
             'phone_number': 'Phone Number',
-            'country': 'Country',
             'postcode': 'Postal Code',
             'town_or_city': 'Town or City',
             'street_address1': 'Street Address 1',
             'street_address2': 'Street Address 2',
-            'county': 'County',
+            'county': 'County, State or Locality',
         }
 
         # We're then autofocusing on the full_name field
@@ -48,14 +47,15 @@ class OrderForm(forms.ModelForm):
 
         # We then iterate over the fields
         for field in self.fields:
-            # Add * for each required field
-            if self.fields[field].required:
-                placeholder = f'{placeholders[field]} *'
-            else:
-                placeholder = placeholders[field]
-            
-            # Give them their respective placeholders & classes
-            self.fields[field].widget.attrs['placeholder'] = placeholder
+            if field != "country":
+                # Add * for each required field
+                if self.fields[field].required:
+                    placeholder = f'{placeholders[field]} *'
+                else:
+                    placeholder = placeholders[field]
+                
+                # Give them their respective placeholders & classes
+                self.fields[field].widget.attrs['placeholder'] = placeholder
 
             # Follow stripe css in the checkout css file
             self.fields[field].widget.attrs['class'] = 'stripe-style-input'
