@@ -25,7 +25,7 @@ class OrderAdmin(admin.ModelAdmin):
     # However, it allows us to tell django how we want the fields to be ordered in admin
     # Without this, django would adjust it accordingly due to the use of some read-only fields
     # Now the order will stay the same as the way it is within the model
-    fields = ('order_number', 'date', 'full_name',
+    fields = ('order_number', 'user_profile', 'date', 'full_name',
               'email', 'phone_number', 'country',
               'postcode', 'town_or_city', 'street_address1',
               'street_address2', 'county', 'delivery_cost',
