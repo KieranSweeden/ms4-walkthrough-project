@@ -212,6 +212,9 @@ STANDARD_DELIVERY_PERCENTAGE = 10
 STRIPE_CURRENCY = 'usd'
 STRIPE_WH_SECRET = os.environ.get("STRIPE_WH_SECRET")
 
+# Default email
+DEFAULT_FROM_EMAIL = "boutiqueado@example.com"
+
 # The following are env variables
 # The public key is here purely for consistency
 # The secret key is important to be secret as it's used to do

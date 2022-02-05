@@ -2,6 +2,9 @@
 # Webhooks are similar to django signals, except that they're sent securely
 # from stripe to a URL we specify, hence including httpresponse below
 from django.http import HttpResponse
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.conf import settings
 
 from .models import Order, OrderLineItem
 from products.models import Product
@@ -20,7 +23,43 @@ class StripeWH_Handler:
         # Here, we're assigning the request as an attribute of the class
         # in case we need to access any attributes of the request coming from stripe
         self.request = request
+    
 
+    # Don't be confused,
+    # Self is not doing anything interesting here
+    # We're just giving it an order
+    # It only starts with underscore as it'll
+    # only be used inside this class
+    def _send_confirmation_email(self, order):
+        """
+        Send the user a confirmation email
+        """
+
+        # Store the customer's email from the order in a variable
+        cust_email = order.email
+
+        # Render both text email files to strings
+        # First param is the file path
+        # Second is the context i.e the order information to be interpolated
+        subject = render_to_string(
+            'checkout/confirmation_emails/confirmation_email_subject.txt',
+            {"order": order}
+        )
+
+        # Do the same for body, except provide a default email from django
+        body = render_to_string(
+            'checkout/confirmation_emails/confirmation_email_body.txt',
+            {"order": order, "contact_email": settings.DEFAULT_FROM_EMAIL}
+        )
+
+        # Send the email providing
+        # Subject title, body, email sending from & emails sending to
+        send_mail(
+            subject,
+            body,
+            settings.DEFAULT_FROM_EMAIL,
+            [cust_email]
+        )
 
     def handle_event(self, event):
         """
@@ -129,6 +168,11 @@ class StripeWH_Handler:
                 time.sleep(1)
 
         if order_exists:
+
+            # Payment has absolutely been made at this point
+            # so send email
+            self._send_confirmation_email(order)
+
             return HttpResponse(
                     content=f'Webhook received: {event["type"]} | SUCCESS: Verified order already in database',
                     status=200)
@@ -184,6 +228,10 @@ class StripeWH_Handler:
                     return HttpResponse(
                 content=f'Webhook received: {event["type"]} | ERROR: {e}',
                 status=500)
+
+        # Payment has absolutely been made at this point
+        # so send email
+        self._send_confirmation_email(order)
 
         return HttpResponse(content=f'Webhook received: {event["type"]} | SUCCESS: Created Order in webhook',
                             status=200)
