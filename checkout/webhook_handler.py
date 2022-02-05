@@ -5,6 +5,7 @@ from django.http import HttpResponse
 
 from .models import Order, OrderLineItem
 from products.models import Product
+from profiles.models import UserProfile
 
 import json
 import time
@@ -58,6 +59,34 @@ class StripeWH_Handler:
             if value == "":
                 shipping_details.address[field] = None
 
+        # Update profile information if save_info was checked
+        # Start with profile set to none, allowing anonymous users to checkout
+        profile = None
+
+        # Get username from intent
+        username = intent.metadata.username
+        
+        # If the username is anything but AnonymousUser
+        # We know they're an authenticated user
+        if username != "AnonymousUser":
+            # Get profile from authenticated user
+            profile = UserProfile.objects.get(user__username=username)
+
+            # If save info box checked
+            if save_info:
+                # Update profile by adding the shipping details 
+                # as their default delivery information
+                profile.default_phone_number = shipping_details.phone
+                profile.default_country = shipping_details.address.country
+                profile.default_postcode = shipping_details.address.postal_code
+                profile.default_town_or_city = shipping_details.address.city
+                profile.default_street_address1 = shipping_details.address.line1
+                profile.default_street_address2 = shipping_details.address.line2
+                profile.default_county = shipping_details.address.state
+
+                # Save profile
+                profile.save()
+
         # Let's start by assuming that this order doesn't currently already exist
         order_exists = False
 
@@ -72,6 +101,7 @@ class StripeWH_Handler:
                 order = Order.objects.get(
                     # __iexact looks for an exact match and is case insensitive
                     full_name__iexact=shipping_details.name,
+                    user_profile=profile,
                     email__iexact=billing_details.email,
                     phone_number__iexact=shipping_details.phone,
                     country__iexact=shipping_details.address.country,
