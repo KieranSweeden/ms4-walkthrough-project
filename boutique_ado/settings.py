@@ -28,7 +28,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 # Debug will only be true if there's a variable called development
 # in the environment
-DEBUG = 'DEVELOPMENT' in os.environ
+# DEBUG = 'DEVELOPMENT' in os.environ
+DEBUG = True
 
 ALLOWED_HOSTS = ['the-boutique-ado-ms4-project.herokuapp.com', 'localhost']
 
