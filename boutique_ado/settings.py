@@ -219,6 +219,16 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 if 'USE_AWS' in os.environ:
+
+    # Cache control
+    # This will tell the browser it's okay to cache static files
+    # As they won't change very often and this will improve
+    # Performance for our users
+    AWS_S3_OBJECT_PARAMETERS = {
+        'Expires': 'THU, 31 2099 20:00:00 GMT',
+        'CacheControl': 'max-age=94608000',
+    }
+
     # Bucket Config
     AWS_STORAGE_BUCKET_NAME = 'the-boutique-ado-ms4-project'
     AWS_S3_REGION_NAME = 'eu-west-1'
