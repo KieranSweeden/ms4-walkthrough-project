@@ -58,6 +58,9 @@ INSTALLED_APPS = [
     # crispy forms - allows us to format our forms using
     # bootstrap styling
     "crispy_forms",
+
+    # django storages
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -214,6 +217,35 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 MEDIA_URL = "/media/"
 # tells django where all of our media files are located
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+if 'USE_AWS' in os.environ:
+    # Bucket Config
+    AWS_STORAGE_BUCKET_NAME = 'the-boutique-ado-ms4-project'
+    AWS_S3_REGION_NAME = 'eu-west-1'
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
+    # Static & media files
+    # For static file storage we want to use our
+    # StaticStorage class
+    STATICFILES_STORAGE = 'custom_storage.StaticStorage'
+
+    # The location django should save to is a folder
+    # named static
+    STATICFILES_LOCATION = 'static'
+
+    # For media file storage we want to use our
+    # MediaStorage class
+    DEFAULT_FILE_STORAGE = 'custom_storage.MediaStorage'
+
+    # The location django should save to is a folder
+    # named media
+    MEDIAFILES_LOCATION = 'media'
+
+    # Override static and media URLS in production
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}'
 
 # Stripe
 FREE_DELIVERY_THRESHOLD = 50
