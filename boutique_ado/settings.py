@@ -225,7 +225,7 @@ if 'USE_AWS' in os.environ:
     # As they won't change very often and this will improve
     # Performance for our users
     AWS_S3_OBJECT_PARAMETERS = {
-        'Expires': 'THU, 31 2099 20:00:00 GMT',
+        'Expires': 'Thu, 31 Dec 2099 20:00:00 GMT',
         'CacheControl': 'max-age=94608000',
     }
 
