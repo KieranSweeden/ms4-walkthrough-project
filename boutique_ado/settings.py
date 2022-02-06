@@ -239,7 +239,7 @@ if 'USE_AWS' in os.environ:
     # Static & media files
     # For static file storage we want to use our
     # StaticStorage class
-    STATICFILES_STORAGE = 'custom_storage.StaticStorage'
+    STATICFILES_STORAGE = 'custom_storages.StaticStorage'
 
     # The location django should save to is a folder
     # named static
@@ -247,15 +247,15 @@ if 'USE_AWS' in os.environ:
 
     # For media file storage we want to use our
     # MediaStorage class
-    DEFAULT_FILE_STORAGE = 'custom_storage.MediaStorage'
+    DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
 
     # The location django should save to is a folder
     # named media
     MEDIAFILES_LOCATION = 'media'
 
     # Override static and media URLS in production
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}'
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
 
 # Stripe
 FREE_DELIVERY_THRESHOLD = 50
