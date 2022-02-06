@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
 
+# For superuser security (made sure superuser functionality is)
+# only accessable to super users
+from django.contrib.auth.decorators import login_required
+
 # Q object used to generate search query
 # Using search filtering ob objects generically, only allows
 # && logic. So it'll filter down to those object that match the
@@ -97,9 +101,15 @@ def product_detail(request, product_id):
 
     return render(request, "products/product_detail.html", context)
 
-
+@login_required
 def add_product(request):
     """ Render add product template to add a product to the store """
+
+    if not request.user.is_superuser:
+
+        messages.error(request, "Sorry, only store owners can do that")
+
+        return redirect(reverse("home"))
 
     # If we
     if request.method == 'POST':
@@ -133,9 +143,16 @@ def add_product(request):
 
     return render(request, template, context)
 
-
+@login_required
 def edit_product(request, product_id):
     """ Edit a product in the store """
+
+    if not request.user.is_superuser:
+
+        messages.error(request, "Sorry, only store owners can do that")
+
+        return redirect(reverse("home"))
+
     # Get the product using the product id
     product = get_object_or_404(Product, pk=product_id)
 
@@ -173,9 +190,16 @@ def edit_product(request, product_id):
 
     return render(request, template, context)
 
-
+@login_required
 def delete_product(request, product_id):
     """ Delete a product from the store """
+
+    if not request.user.is_superuser:
+
+        messages.error(request, "Sorry, only store owners can do that")
+
+        return redirect(reverse("home"))
+
     # Get the product using the product_id
     product = get_object_or_404(Product, pk=product_id)
 

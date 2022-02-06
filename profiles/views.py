@@ -1,13 +1,17 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 
+# For superuser security (made sure superuser functionality is)
+# only accessable to super users
+from django.contrib.auth.decorators import login_required
+
 from checkout.models import Order
 
 from .models import UserProfile
 from .forms import UserProfileForm
 
 
-
+@login_required
 def profile(request):
     """ Display the user's profile. """
 
