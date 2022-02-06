@@ -32,7 +32,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['the-boutique-ado-ms4-project.herokuapp.com', 'localhost']
 
-
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
