@@ -151,8 +151,6 @@ LOGIN_URL = '/accounts/login/'
 # url to be redirected to when logged in
 LOGIN_REDIRECT_URL = '/'
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
 WSGI_APPLICATION = 'boutique_ado.wsgi.application'
 
 
@@ -262,9 +260,6 @@ STANDARD_DELIVERY_PERCENTAGE = 10
 STRIPE_CURRENCY = 'usd'
 STRIPE_WH_SECRET = os.environ.get("STRIPE_WH_SECRET")
 
-# Default email
-DEFAULT_FROM_EMAIL = "boutiqueado@example.com"
-
 # The following are env variables
 # The public key is here purely for consistency
 # The secret key is important to be secret as it's used to do
@@ -281,3 +276,21 @@ STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if 'DEVELOPMENT' in os.environ:
+    # Variables for development
+
+    # Default email
+    DEFAULT_FROM_EMAIL = "boutiqueado@example.com"
+
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+else:
+    # Variables for production
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = 587
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASS')
+    DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
